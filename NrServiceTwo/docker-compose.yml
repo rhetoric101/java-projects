@@ -2,10 +2,12 @@ networks:
   my-network:
     external: true
     driver: bridge
+
 services:
   mysql:
     build:
       context: ../mysql-docker-container
+      dockerfile: Dockerfile
     image: mysql
     container_name: my-mysql-container
     environment:
@@ -17,18 +19,28 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - my-network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root --password=example"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   nrservicetwo:
-    build: .
+    image: nrservicetwo:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-17.jdk/Contents/Home
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/proverbsdb
+      - SPRING_DATASOURCE_USERNAME=remoteuser
+      - SPRING_DATASOURCE_PASSWORD=baron69Tronch
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - "8080:8080"
     networks:
       - my-network
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/proverbsdb
-      SPRING_DATASOURCE_USERNAME: remoteuser
-      SPRING_DATASOURCE_PASSWORD: baron69Tronch 
 
 volumes:
   mysql-data:
