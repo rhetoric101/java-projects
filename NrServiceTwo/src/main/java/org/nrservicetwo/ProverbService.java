@@ -12,10 +12,8 @@ import java.util.Random;
 @Service
 public class ProverbService {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
     private ProverbRepository proverbRepository;
     private final Random random = new Random();
 
@@ -39,6 +37,5 @@ public class ProverbService {
         return proverbRepository.findAll().get(index);
     }
 }
-
 
 
