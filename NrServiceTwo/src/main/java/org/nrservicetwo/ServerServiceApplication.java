@@ -5,8 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
-@ComponentScan(basePackages = "org.nrservicetwo")
+@SpringBootApplication(scanBasePackages = "org.nrservicetwo")
 @EnableFeignClients
 public class ServerServiceApplication {
     public static void main(String[] args) {
